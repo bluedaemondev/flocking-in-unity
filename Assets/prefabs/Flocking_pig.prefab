@@ -1178,6 +1178,8 @@ GameObject:
   - component: {fileID: 5313824875484731579}
   - component: {fileID: 6360261030345987436}
   - component: {fileID: 5764551638151234949}
+  - component: {fileID: 5842522477953705056}
+  - component: {fileID: 3677814142041971157}
   m_Layer: 8
   m_Name: Flocking_pig
   m_TagString: Untagged
@@ -1232,3 +1234,47 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.74
   m_Center: {x: 0, y: -0.21, z: 0}
+--- !u!114 &5842522477953705056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8811129877548918382}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f59aaf032cdb144988b208b09a6f3d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 0.87
+  maxForce: 0.69
+  arriveDistance: 0.99
+  target: {fileID: 0}
+  target2: {fileID: 0}
+  SeekWeight: 0.11
+  FleeWeight: 0.89
+--- !u!114 &3677814142041971157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8811129877548918382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c444e4800cddeba4eb718bf9c9818180, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 0.6
+  maxForce: 1
+  viewDistance: 3
+  separationWeight: 0.15
+  cohesionWeight: 0.6
+  alignWeight: 0.25
+  seekWeight: 1
+  contactArea: {fileID: 0}
+  forwardDistance: 1
+  currentlySeeking: {fileID: 0}
+  whatIsFood:
+    serializedVersion: 2
+    m_Bits: 32

@@ -85,7 +85,7 @@ public class Agent : MonoBehaviour
             //  float speed = maxSpeed * (desired.magnitude / arriveDistance);
             //  Debug.Log(speed);
 
-            float speed = Map(desired.magnitude, 0, arriveDistance, 0, maxSpeed);
+            float speed = Utils.Map(desired.magnitude, 0, arriveDistance, 0, maxSpeed);
             desired.Normalize();
             desired *= speed;
         }
@@ -107,8 +107,5 @@ public class Agent : MonoBehaviour
         _velocity = Vector3.ClampMagnitude(_velocity + force, maxSpeed);
     }
 
-    float Map(float from, float fromMin, float fromMax, float toMin, float toMax)
-    {
-        return (from - toMin) / (fromMax - fromMin) * (toMax - toMin) + fromMin;
-    }
+   
 }

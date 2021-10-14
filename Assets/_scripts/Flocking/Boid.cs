@@ -2,9 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BoidState { 
+    Idle,
+    Patrol,
+    SearchingFood,
+    ChasingFood,
+    Eating,
+    Dead
+}
+
 public class Boid : MonoBehaviour
 {
     private Vector3 _velocity;
+    internal Collider m_collider;
 
     [SerializeField]
     private float maxSpeed;
@@ -53,10 +63,7 @@ public class Boid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //contactArea.CheckBounds(this.transform);
         FoodFinder();
-
-        UpdateValues();
 
         ApplyForce(FlockingBrain.Instance.CalculateCohesion(this) * cohesionWeight);
         ApplyForce(FlockingBrain.Instance.CalculateSeparation(this) * separationWeight);
@@ -71,23 +78,11 @@ public class Boid : MonoBehaviour
         transform.forward = Velocity.normalized;
     }
 
-    void UpdateValues()
-    {
-        separationWeight = FlockingBrain.Instance.GlobalSeparationWeight;
-        cohesionWeight = FlockingBrain.Instance.GlobalCohesionWeight;
-        alignWeight = FlockingBrain.Instance.GlobalAlignWeight;
-        maxForce = FlockingBrain.Instance.GlobalMaxForce;
-        maxSpeed = FlockingBrain.Instance.GlobalMaxSpeed;
-        viewDistance = FlockingBrain.Instance.ViewDistance;
-    }
-
     void ApplyForce(Vector3 force)
     {
         this._velocity += force;
         this._velocity = Vector3.ClampMagnitude(this._velocity, this.maxSpeed);
     }
-
-    
 
     void FoodFinder()
     {
@@ -102,4 +97,16 @@ public class Boid : MonoBehaviour
     {
         Gizmos.DrawWireSphere(transform.position, viewDistance);
     }
+
+    //List<Transform> GetNearbyBoids(Boid agent)
+    //{
+    //    List<Transform> context = new List<Transform>();
+    //    Collider[] colsContext = Physics.OverlapSphere(agent.transform.position, viewDistance);
+    //    foreach(Collider col in colsContext)
+    //    {
+    //        if (col != agent.m_collider)
+    //            context.Add(col.transform);
+    //    }
+    //    return context;
+    //}
 }

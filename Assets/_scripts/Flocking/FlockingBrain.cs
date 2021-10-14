@@ -14,6 +14,14 @@ public class FlockingBrain : MonoBehaviour
 
     private static FlockingBrain _instance;
 
+    [SerializeField]
+    private GameObject boidPrefab;
+    [SerializeField]
+    private int boidCount = 10;
+    [SerializeField]
+    private Transform mainSpawnpoint;
+
+
     private List<Boid> loadedBoids;
 
     [Header("Boid Values")]
@@ -52,7 +60,25 @@ public class FlockingBrain : MonoBehaviour
     {
         _instance = this;
         loadedBoids = new List<Boid>();
+
+        Boid b;
+        Vector3 position;
+        Quaternion rotation;
+
+        // random spawning
+
+        for (int i = 0; i < boidCount; i++)
+        {
+            position = transform.position + Random.insideUnitSphere * Random.Range(-3, 3);
+            position.y = transform.position.y;
+
+            rotation = Quaternion.Euler(Vector3.up * Random.Range(0, 360));
+            b = Instantiate(boidPrefab, position, rotation, transform).GetComponent<Boid>();
+
+            AddBoid(b);
+        }
     }
+
 
     public void AddBoid(Boid b)
     {
@@ -60,6 +86,7 @@ public class FlockingBrain : MonoBehaviour
             loadedBoids.Add(b);
     }
 
+    #region MOVEMENT_METHODS
     public Vector3 CalculateCohesion(Boid b)
     {
         Vector3 desired = new Vector3();
@@ -160,6 +187,33 @@ public class FlockingBrain : MonoBehaviour
         return steering;
     }
 
+    public Vector3 CalculateArrive(GameObject target, float arriveDistance, Boid b)
+    {
+        Vector3 desired = target.transform.position - transform.position;
+
+
+        if (desired.magnitude < arriveDistance)
+        {
+
+            //  float speed = maxSpeed * (desired.magnitude / arriveDistance);
+            //  Debug.Log(speed);
+
+            float speed = Utils.Map(desired.magnitude, 0, arriveDistance, 0, globalMaxSpeed);
+            desired.Normalize();
+            desired *= speed;
+        }
+        else
+        {
+            desired.Normalize();
+            desired *= globalMaxSpeed;
+        }
+
+        Vector3 steering = desired - b.Velocity;
+        steering = Vector3.ClampMagnitude(steering, b.MaxForce);
+
+        return steering;
+    }
+
 
     //public Vector3 CalculateObstacleAvoidance(Boid b)
     //{
@@ -182,6 +236,11 @@ public class FlockingBrain : MonoBehaviour
 
     //    return steering;
     //}
+    #endregion
 
+    #region INITIALIZATION
+
+
+    #endregion
 
 }
