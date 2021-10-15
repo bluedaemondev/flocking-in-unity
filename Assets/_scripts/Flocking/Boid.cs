@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BoidState { 
+public enum BoidState
+{
     Idle,
     Patrol,
     SearchingFood,
@@ -32,8 +33,6 @@ public class Boid : MonoBehaviour
     [SerializeField]
     private float seekWeight;
 
-    [SerializeField]
-    BoundedArea contactArea;
 
     [SerializeField]
     float forwardDistance;
@@ -44,34 +43,59 @@ public class Boid : MonoBehaviour
     LayerMask whatIsFood;
 
     public Vector3 Velocity { get => _velocity; }
-    public float MaxForce { get => maxForce; }
+    public float MaxForce { get => maxForce; set => maxForce = value; }
+    public float MaxSpeed { get => maxSpeed; set => maxSpeed = value; }
+    public float ViewDistance { get => viewDistance; set => viewDistance = value; }
+
+    //public FiniteStateMachine _fsm;
 
     // Start is called before the first frame update
-    void Start()
+    //void Start()
+    //{
+    //    ////this.contactArea = FlockingBrain.Instance.spawnBounds;
+    //    //FlockingBrain.Instance.AddBoid(this);
+
+    //    //Vector3 randomForce = new Vector3(Random.Range(-6, 2), 0, Random.Range(-6, 6));
+    //    //randomForce.Normalize();
+    //    //randomForce *= maxSpeed;
+
+    //    //randomForce = Vector3.ClampMagnitude(randomForce, MaxForce);
+
+    //    ////ApplyForce(randomForce);
+    //}
+    private void Start()
     {
-        FlockingBrain.Instance.AddBoid(this);
 
-        Vector3 randomForce = new Vector3(Random.Range(-2, 2), 0, Random.Range(-2, 2));
-        randomForce.Normalize();
-        randomForce *= maxSpeed;
-
-        randomForce = Vector3.ClampMagnitude(randomForce, MaxForce);
-
-        ApplyForce(randomForce);
+        FoodFinder();
     }
-
     // Update is called once per frame
     void Update()
     {
         FoodFinder();
 
-        ApplyForce(FlockingBrain.Instance.CalculateCohesion(this) * cohesionWeight);
-        ApplyForce(FlockingBrain.Instance.CalculateSeparation(this) * separationWeight);
-        ApplyForce(FlockingBrain.Instance.CalculateAlign(this) * alignWeight);
-        
+
+        ApplyForce(FlockingBrain.Instance.CalculateCohesion(this) * cohesionWeight * (1-seekWeight));
+        ApplyForce(FlockingBrain.Instance.CalculateSeparation(this) * (1 - seekWeight));
+        ApplyForce(FlockingBrain.Instance.CalculateAlign(this) * (1 - seekWeight));
+
+
         if (currentlySeeking != null)
+        {
             ApplyForce(FlockingBrain.Instance.CalculateSeek(currentlySeeking.transform.position, this) * seekWeight);
-        
+
+            if ((currentlySeeking.transform.position - transform.position).magnitude <= 1.5f)
+            {
+                currentlySeeking.GetComponent<Pickup>().BeEaten(this);
+                _velocity = Vector3.zero;
+
+                ApplyForce(FlockingBrain.Instance.CalculateArrive(currentlySeeking, 1, this));
+            }
+        }
+
+
+
+
+
         _velocity.y = 0;
 
         transform.position += Velocity * Time.deltaTime;
@@ -81,21 +105,25 @@ public class Boid : MonoBehaviour
     void ApplyForce(Vector3 force)
     {
         this._velocity += force;
-        this._velocity = Vector3.ClampMagnitude(this._velocity, this.maxSpeed);
+        this._velocity = Vector3.ClampMagnitude(this._velocity, this.MaxSpeed);
     }
 
     void FoodFinder()
     {
-        var aux = Physics.SphereCastAll(transform.position, viewDistance, Vector3.zero, viewDistance, whatIsFood.value);
-        if (aux.Length > 0)
+        if (currentlySeeking != null)
+            return;
+
+        foreach (var pickup in PickupsManager.Instance.LoadedPickups)
         {
-            Debug.Log(string.Format("{0} pickups in range, following {1}", aux.Length, aux[0].transform.name));
-            currentlySeeking = aux[0].transform.gameObject;
+            if (!pickup.hasSeeker /*&& Vector3.Magnitude(transform.position - pickup.transform.position) < forwardDistance*/)
+            {
+                this.currentlySeeking = pickup.gameObject;
+            }
         }
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, viewDistance);
+        Gizmos.DrawWireSphere(transform.position, ViewDistance);
     }
 
     //List<Transform> GetNearbyBoids(Boid agent)

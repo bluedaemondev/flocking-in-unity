@@ -19,7 +19,7 @@ public class PickupsManager : MonoBehaviour
     private GameObject prefabPickup;
 
     [SerializeField]
-    private List<GameObject> loadedPickups;
+    private List<Pickup> loadedPickups;
 
     [SerializeField, Header("Y Capped at 15")]
     private BoxCollider areaSpawn;
@@ -27,14 +27,14 @@ public class PickupsManager : MonoBehaviour
     [SerializeField]
     private int spawnedPickups = 3;
 
-    public List<GameObject> LoadedPickups { get => loadedPickups; }
+    public List<Pickup> LoadedPickups { get => loadedPickups; }
 
     // Start is called before the first frame update
     void Awake()
     {
         _instance = this;
 
-        loadedPickups = new List<GameObject>();
+        loadedPickups = new List<Pickup>();
 
         StartCoroutine(LoadPickupsInScene(this.spawnedPickups));
 
@@ -59,12 +59,12 @@ public class PickupsManager : MonoBehaviour
 
         return result;
     }
-    private GameObject GeneratePickup(Vector3 spawnPosition)
+    private Pickup GeneratePickup(Vector3 spawnPosition)
     {
         GameObject result;
 
         result = Instantiate(prefabPickup, spawnPosition, Quaternion.identity, null);
 
-        return result;
+        return result.GetComponent<Pickup>();
     }
 }

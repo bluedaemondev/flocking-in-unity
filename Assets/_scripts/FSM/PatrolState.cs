@@ -50,7 +50,7 @@ public class PatrolState : IState
         var aux = Physics.SphereCastAll(m_transform.position, 10, Vector3.zero, 0, whatIsFood.value);
         Debug.DrawRay(m_transform.position, m_transform.forward * 10, Color.green);
 
-        Debug.Log(string.Format("{0} pickups in range, following {1}", aux.Length, aux.Length > 0 ? aux[0].transform.name : ""));
+        Debug.Log(string.Format("{0} pigs in range, following {1}", aux.Length, aux.Length > 0 ? aux[0].transform.name : "not assigned"));
 
         if (aux.Length > 0)
         {

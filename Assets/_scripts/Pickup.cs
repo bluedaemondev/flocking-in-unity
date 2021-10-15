@@ -11,34 +11,36 @@ public class Pickup : MonoBehaviour
 
     Coroutine beingAte;
 
+    [Range(0.1f, 5f)]
+    public float rangeBeingEat = 2.13f;
+    public bool hasSeeker;
+
+    public void BeEaten(Boid b)
+    {
+        b.MaxForce = 0;
+        StartCoroutine(EatenCoroutine());
+    }
     private IEnumerator EatenCoroutine()
     {
         while (health > 0)
         {
             health -= eatenPerSec;
+
             yield return new WaitForSeconds(1f);
             Debug.Log("health " + health);
         }
 
-        PickupsManager.Instance.LoadedPickups.Remove(this.gameObject);
+        PickupsManager.Instance.LoadedPickups.Remove(this);
+
         Destroy(this.gameObject);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (beingAte == null && other.CompareTag("Player")) {
-            Debug.Log("Entering food source");
-            beingAte = StartCoroutine(EatenCoroutine());
-        }
-
     }
 
     //// Start is called before the first frame update
     void Start()
     {
-        if (!PickupsManager.Instance.LoadedPickups.Contains(this.gameObject))
+        if (!PickupsManager.Instance.LoadedPickups.Contains(this))
         {
-            PickupsManager.Instance.LoadedPickups.Add(this.gameObject);
+            PickupsManager.Instance.LoadedPickups.Add(this);
         }
     }
 

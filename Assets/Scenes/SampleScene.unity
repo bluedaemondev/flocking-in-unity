@@ -332,7 +332,6 @@ MonoBehaviour:
   cohesionWeight: 0.6
   alignWeight: 0.25
   seekWeight: 1
-  contactArea: {fileID: 386791157}
   forwardDistance: 1
   currentlySeeking: {fileID: 0}
   whatIsFood:
@@ -404,6 +403,8 @@ MonoBehaviour:
   health: 100
   eatenPerSec: 25
   canLoseHealth: 0
+  rangeBeingEat: 2.13
+  hasSeeker: 0
 --- !u!23 &137547366
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -546,6 +547,8 @@ MonoBehaviour:
   health: 100
   eatenPerSec: 25
   canLoseHealth: 0
+  rangeBeingEat: 2.13
+  hasSeeker: 0
 --- !u!23 &207260307
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -682,7 +685,6 @@ MonoBehaviour:
   cohesionWeight: 0.6
   alignWeight: 0.25
   seekWeight: 1
-  contactArea: {fileID: 386791157}
   forwardDistance: 1
   currentlySeeking: {fileID: 0}
   whatIsFood:
@@ -797,7 +799,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 359055842}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.01, z: 0}
+  m_LocalPosition: {x: 0, y: 3.37, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -820,12 +822,12 @@ MonoBehaviour:
   boidCount: 3
   mainSpawnpoint: {fileID: 1874933175}
   globalViewDistance: 2
-  globalSeparationWeight: 0.15
-  globalCohesionWeight: 0.79
-  globalAlignWeight: 0.25
-  globalMaxSpeed: 3.17
+  globalSeparationWeight: 0.1
+  globalCohesionWeight: 0.6
+  globalAlignWeight: 0
+  globalMaxSpeed: 2
   viewDistance: 2
-  globalMaxForce: 0.76
+  globalMaxForce: 1
 --- !u!1001 &370991061
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -959,7 +961,6 @@ MonoBehaviour:
   cohesionWeight: 0.6
   alignWeight: 0.25
   seekWeight: 1
-  contactArea: {fileID: 386791157}
   forwardDistance: 1
   currentlySeeking: {fileID: 0}
   whatIsFood:
@@ -1346,7 +1347,6 @@ MonoBehaviour:
   cohesionWeight: 0.6
   alignWeight: 0.25
   seekWeight: 1
-  contactArea: {fileID: 386791157}
   forwardDistance: 1
   currentlySeeking: {fileID: 0}
   whatIsFood:
@@ -1820,7 +1820,6 @@ MonoBehaviour:
   cohesionWeight: 0.6
   alignWeight: 0.25
   seekWeight: 1
-  contactArea: {fileID: 386791157}
   forwardDistance: 1
   currentlySeeking: {fileID: 0}
   whatIsFood:
@@ -1937,8 +1936,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0.06664127, y: -0.9333447, z: 0.24960433, w: -0.24924752}
-  m_LocalPosition: {x: -2.5277529, y: 7.34512, z: 7.3894863}
+  m_LocalRotation: {x: -0.12903689, y: -0.86969894, z: 0.36087275, w: -0.31103724}
+  m_LocalPosition: {x: -14.3, y: 22.96, z: 19.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2010,6 +2009,8 @@ MonoBehaviour:
   health: 100
   eatenPerSec: 25
   canLoseHealth: 0
+  rangeBeingEat: 2.13
+  hasSeeker: 0
 --- !u!23 &979255341
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2414,7 +2415,6 @@ MonoBehaviour:
   cohesionWeight: 0.6
   alignWeight: 0.25
   seekWeight: 1
-  contactArea: {fileID: 386791157}
   forwardDistance: 1
   currentlySeeking: {fileID: 0}
   whatIsFood:
@@ -4383,7 +4383,6 @@ MonoBehaviour:
   cohesionWeight: 0.6
   alignWeight: 0.25
   seekWeight: 1
-  contactArea: {fileID: 386791157}
   forwardDistance: 1
   currentlySeeking: {fileID: 713285294}
   whatIsFood:
@@ -4449,7 +4448,6 @@ MonoBehaviour:
   cohesionWeight: 0.6
   alignWeight: 0.25
   seekWeight: 1
-  contactArea: {fileID: 386791157}
   forwardDistance: 1
   currentlySeeking: {fileID: 0}
   whatIsFood:

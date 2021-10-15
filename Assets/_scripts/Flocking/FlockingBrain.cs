@@ -21,6 +21,8 @@ public class FlockingBrain : MonoBehaviour
     [SerializeField]
     private Transform mainSpawnpoint;
 
+    //public BoundedArea spawnBounds;
+
 
     private List<Boid> loadedBoids;
 
@@ -38,7 +40,7 @@ public class FlockingBrain : MonoBehaviour
     [SerializeField]
     private float viewDistance;
 
-    [SerializeField, Range(0.01f, 1f)]
+    [SerializeField, Range(0.01f, 10f)]
     private float globalMaxForce;
 
     public List<Boid> LoadedBoids { get => loadedBoids; }
@@ -94,7 +96,7 @@ public class FlockingBrain : MonoBehaviour
 
         foreach (var item in LoadedBoids)
         {
-            if (item != this && Vector3.Distance(item.transform.position, transform.position) < viewDistance)
+            if (item != this && Vector3.Distance(item.transform.position, transform.position) < b.ViewDistance)
             {
                 nearbyBoids++;
                 desired += item.transform.position;
@@ -107,10 +109,10 @@ public class FlockingBrain : MonoBehaviour
         desired /= nearbyBoids;
         desired = desired - transform.position;
         desired.Normalize();
-        desired *= globalMaxSpeed;
+        desired *= b.MaxSpeed;
 
-        // Vector3 steering = Seek(desired);
-        Vector3 steering = desired - b.Velocity;
+        Vector3 steering = CalculateSeek(desired, b);
+        //Vector3 steering = desired - b.Velocity;
         steering = Vector3.ClampMagnitude(steering, b.MaxForce);
 
         return steering;
@@ -124,7 +126,7 @@ public class FlockingBrain : MonoBehaviour
         {
             Vector3 distance = (boid.transform.position - transform.position);
 
-            if (boid != this && distance.magnitude < viewDistance)
+            if (boid != this && distance.magnitude < b.ViewDistance)
             {
                 // desired += distance;
                 desired.x += distance.x;
@@ -157,7 +159,7 @@ public class FlockingBrain : MonoBehaviour
             if (item != this && item != null)
             {
                 Vector3 dist = item.transform.position - transform.position;
-                if (Vector3.Magnitude(dist) < viewDistance)
+                if (Vector3.Magnitude(dist) < b.ViewDistance)
                 {
                     boidsNearby++;
                     desired.x += item.Velocity.x;
@@ -168,7 +170,7 @@ public class FlockingBrain : MonoBehaviour
         if (boidsNearby == 0) return Vector3.zero;
         desired = desired / boidsNearby;
         desired.Normalize();
-        desired *= globalMaxSpeed;
+        desired *= b.MaxSpeed;
 
         Vector3 steering = Vector3.ClampMagnitude(desired - b.Velocity, b.MaxForce);
 
@@ -179,10 +181,10 @@ public class FlockingBrain : MonoBehaviour
     {
         Vector3 desired = pos - transform.position;
         desired.Normalize();
-        desired *= GlobalMaxSpeed;
+        desired *= b.MaxSpeed;
 
         Vector3 steering = desired - b.Velocity;
-        steering = Vector3.ClampMagnitude(steering, GlobalMaxForce);
+        steering = Vector3.ClampMagnitude(steering, b.MaxForce);
 
         return steering;
     }
@@ -198,7 +200,7 @@ public class FlockingBrain : MonoBehaviour
             //  float speed = maxSpeed * (desired.magnitude / arriveDistance);
             //  Debug.Log(speed);
 
-            float speed = Utils.Map(desired.magnitude, 0, arriveDistance, 0, globalMaxSpeed);
+            float speed = Utils.Map(desired.magnitude, 0, arriveDistance, 0, b.MaxSpeed);
             desired.Normalize();
             desired *= speed;
         }
