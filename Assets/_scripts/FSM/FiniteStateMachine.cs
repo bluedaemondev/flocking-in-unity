@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FiniteStateMachine
 {
-    IState _currentState = new BlankState();
-    Dictionary<HunterEnum, IState> _allStates = new Dictionary<HunterEnum, IState>();
+    public IState _currentState = new BlankState();
+    public Dictionary<HunterEnum, IState> _allStates = new Dictionary<HunterEnum, IState>();
 
     private float totalEnergy;
 
@@ -16,7 +16,7 @@ public class FiniteStateMachine
         TotalEnergy = 100;
     }
 
-    public void OnUpdate()
+    public virtual void OnUpdate()
     {
         _currentState.OnUpdate();
     }

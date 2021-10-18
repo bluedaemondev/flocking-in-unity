@@ -7,7 +7,7 @@ public enum BoidState
 {
     Idle,
     Patrol,
-    SearchingFood,
+    EvadingHunter,
     ChasingFood,
     Eating,
     Dead
@@ -19,11 +19,17 @@ public enum BoidState
 /// </summary>
 public class Pig : MonoBehaviour
 {
-    public Animator m_animator;
-    public IMovement currentMovement;
-    
-    FiniteStateMachine _fsm;
+    public BoidState CurrentState;
 
+    private Animator m_animator;
+    private PigFiniteStateMachine _fsm;
+
+    [Header("Animation params")]
+    public string movingPatrolBool = "isMoving";
+    public string avoidHunterTrigger = "evadeHunter";
+    public string chaseFood = "chaseFood";
+    public string eating = "eating";
+    public string deadTrigger = "dying";
 
 
     // Pasar a Imovement
@@ -49,6 +55,32 @@ public class Pig : MonoBehaviour
     private float alignWeight;
     [SerializeField, Range(0.1f, 1f)]
     private float seekWeight;
+
+    public Vector3 _velocity;
+
+
+    private void Awake()
+    {
+        this._fsm = new PigFiniteStateMachine();
+        this._fsm.AddState(BoidState.Idle, new BlankState());
+        this._fsm.AddState(BoidState.Patrol, new BlankState());
+        this._fsm.AddState(BoidState.EvadingHunter, new EvadingHunterState(transform, FindObjectOfType<Hunter>().transform, this._fsm, this, maxSpeed * 1.15f, maxForce));
+        this._fsm.AddState(BoidState.ChasingFood, new BlankState());
+        this._fsm.AddState(BoidState.Eating, new BlankState());
+        this._fsm.AddState(BoidState.Dead, new BlankState());
+
+        this.m_animator = GetComponent<Animator>();
+
+        this._fsm.ChangeState(BoidState.EvadingHunter);
+
+    }
+
+    public void ApplyForce(Vector3 force)
+    {
+        _velocity = Vector3.ClampMagnitude(_velocity + force, maxSpeed);
+        this.transform.position += _velocity;
+    }
+
 
 
 }
