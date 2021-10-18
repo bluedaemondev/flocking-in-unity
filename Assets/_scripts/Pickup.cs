@@ -7,6 +7,8 @@ public class Pickup : MonoBehaviour
     public float health = 100;
     public float eatenPerSec = 25;
 
+    float originalForce;
+
     public bool canLoseHealth;
 
     Coroutine beingAte;
@@ -17,21 +19,24 @@ public class Pickup : MonoBehaviour
 
     public void BeEaten(Boid b)
     {
+        originalForce = b.MaxForce;
         b.MaxForce = 0;
-        StartCoroutine(EatenCoroutine());
+        StartCoroutine(EatenCoroutine(b));
     }
-    private IEnumerator EatenCoroutine()
+    private IEnumerator EatenCoroutine(Boid b)
     {
         while (health > 0)
         {
             health -= eatenPerSec;
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(3f);
             Debug.Log("health " + health);
         }
 
         PickupsManager.Instance.LoadedPickups.Remove(this);
+        yield return null;
 
+        b.MaxForce = originalForce;
         Destroy(this.gameObject);
     }
 

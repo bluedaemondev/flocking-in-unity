@@ -45,7 +45,7 @@ public class PickupsManager : MonoBehaviour
         for (int i = 0; i < qty; i++)
         {
             loadedPickups.Add(GeneratePickup(RandomColliderPoint(this.areaSpawn)));
-            yield return new WaitForSeconds(0.333f);
+            yield return null;/*new WaitForSeconds(0.333f);*/
         }
     }
     private Vector3 RandomColliderPoint(BoxCollider col)

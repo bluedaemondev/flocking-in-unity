@@ -1247,10 +1247,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 4
   maxForce: 15
-  viewDistance: 10
-  separationWeight: 0.1
+  viewDistance: 3.06
+  areaWalk: {fileID: 0}
+  separationWeight: 0.224
   cohesionWeight: 0.5
-  alignWeight: 0.5
+  alignWeight: 0.64
   seekWeight: 0.8
   forwardDistance: 6
   currentlySeeking: {fileID: 0}

@@ -21,7 +21,7 @@ public class EvadeHunterMovement : IMovement
         this.maxForce = maxForce;
     }
 
-    public void Move(ref Vector3 resultVelocity, bool apply, params object[] weights)
+    public void Move(ref Vector3 resultVelocity)
     {
         Vector3 futurePos = evadeTarget.transform.position + (evadeTarget.transform.forward /*GetComponent<Hunter>().GetVelocity()*/
                                                                 * futureTime * Time.deltaTime);

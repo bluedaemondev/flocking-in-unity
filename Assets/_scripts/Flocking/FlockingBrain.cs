@@ -63,22 +63,25 @@ public class FlockingBrain : MonoBehaviour
         _instance = this;
         loadedBoids = new List<Boid>();
 
+        for (int i = 0; i < boidCount; i++)
+        {
+            SpawnBoid();
+        }
+    }
+    public void SpawnBoid()
+    {
         Boid b;
         Vector3 position;
         Quaternion rotation;
 
         // random spawning
+        position = transform.position + Random.insideUnitSphere * Random.Range(-15, 15);
+        position.y = transform.position.y;
 
-        for (int i = 0; i < boidCount; i++)
-        {
-            position = transform.position + Random.insideUnitSphere * Random.Range(-3, 3);
-            position.y = transform.position.y;
+        rotation = Quaternion.Euler(Vector3.up * Random.Range(0, 360));
+        b = Instantiate(boidPrefab, position, rotation, transform).GetComponent<Boid>();
 
-            rotation = Quaternion.Euler(Vector3.up * Random.Range(0, 360));
-            b = Instantiate(boidPrefab, position, rotation, transform).GetComponent<Boid>();
-
-            AddBoid(b);
-        }
+        AddBoid(b);
     }
 
 

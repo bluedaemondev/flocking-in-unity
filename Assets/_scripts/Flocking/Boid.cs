@@ -9,22 +9,29 @@ public class Boid : MonoBehaviour
     private Vector3 _velocity;
     internal Collider m_collider;
 
+    // max total speed
     [SerializeField]
     private float maxSpeed;
+    // max force applyed by every steering done
     [SerializeField]
     private float maxForce;
+    // target view distance, flock neighbors, pickups
     [SerializeField]
     private float viewDistance;
-    [SerializeField]
-    private float separationWeight;
-    [SerializeField]
-    private float cohesionWeight;
-    [SerializeField]
-    private float alignWeight;
 
-    [SerializeField]
+    public BoundedArea areaWalk;
+
+    [Header("Weighing")]
+    [SerializeField, Range(0.1f, 1f)]
+    private float separationWeight;
+    [SerializeField, Range(0.1f, 1f)]
+    private float cohesionWeight;
+    [SerializeField, Range(0.1f, 1f)]
+    private float alignWeight;
+    [SerializeField, Range(0.1f, 1f)]
     private float seekWeight;
 
+    public bool useGlobal = true;
 
     [SerializeField]
     float forwardDistance;
@@ -59,41 +66,64 @@ public class Boid : MonoBehaviour
     {
 
         FoodFinder();
+        areaWalk = FindObjectOfType<BoundedArea>();
     }
     // Update is called once per frame
     void Update()
     {
+        CheckGlobalValues();
+        
         FoodFinder();
 
-
-        ApplyForce(FlockingBrain.Instance.CalculateCohesion(this) * cohesionWeight * (1-seekWeight));
-        ApplyForce(FlockingBrain.Instance.CalculateSeparation(this) * (1 - seekWeight));
-        ApplyForce(FlockingBrain.Instance.CalculateAlign(this) * (1 - seekWeight));
+        ApplyForce(FlockingBrain.Instance.CalculateCohesion(this) * cohesionWeight);
+        ApplyForce(FlockingBrain.Instance.CalculateSeparation(this) * separationWeight);
+        ApplyForce(FlockingBrain.Instance.CalculateAlign(this) * alignWeight);
 
 
         if (currentlySeeking != null)
-        {
+        {           
+            var distance = (currentlySeeking.transform.position - transform.position).magnitude;
 
-            ApplyForce(FlockingBrain.Instance.CalculateSeek(currentlySeeking.transform.position, this) * seekWeight);
-
-            if ((currentlySeeking.transform.position - transform.position).magnitude <= 1.5f)
+            if (distance <= 5f)
             {
-                currentlySeeking.GetComponent<Pickup>().BeEaten(this);
-                _velocity = Vector3.zero;
+                //_velocity = Vector3.zero;
+                ApplyForce(FlockingBrain.Instance.CalculateSeek(currentlySeeking.transform.position, this) * seekWeight);
+                ApplyForce(FlockingBrain.Instance.CalculateArrive(currentlySeeking, 5, this));
 
-                ApplyForce(FlockingBrain.Instance.CalculateArrive(currentlySeeking, 1, this));
+                if(distance <= 1.5f)
+                {
+                    currentlySeeking.GetComponent<Pickup>().BeEaten(this);
+
+                    currentlySeeking = null;
+                }
             }
         }
 
 
 
-
+        areaWalk.CheckBounds(transform);
 
         _velocity.y = 0;
 
         transform.position += Velocity * Time.deltaTime;
         transform.forward = Velocity.normalized;
     }
+
+    void CheckGlobalValues()
+    {
+        if (!useGlobal)
+            return;
+
+        this.cohesionWeight = FlockingBrain.Instance.GlobalCohesionWeight;
+        separationWeight = FlockingBrain.Instance.GlobalSeparationWeight;
+        alignWeight = FlockingBrain.Instance.GlobalAlignWeight;
+
+        maxForce = FlockingBrain.Instance.GlobalMaxForce;
+        maxSpeed = FlockingBrain.Instance.GlobalMaxSpeed;
+        viewDistance  = FlockingBrain.Instance.ViewDistance;
+
+    }
+
 
     void ApplyForce(Vector3 force)
     {

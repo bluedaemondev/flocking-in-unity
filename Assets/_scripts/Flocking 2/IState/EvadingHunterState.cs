@@ -28,7 +28,7 @@ public class EvadingHunterState : IState
 
     public void OnUpdate()
     {
-        movementHandler.Move(ref velocity, true);
+        movementHandler.Move(ref velocity);
         pig.ApplyForce(velocity);
     }
 

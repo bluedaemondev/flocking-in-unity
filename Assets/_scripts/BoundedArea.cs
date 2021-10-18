@@ -34,7 +34,7 @@ public class BoundedArea : MonoBehaviour
     {
 
         // revisar
-        if (comparedTransform.position.x > GetLeftBound())
+        if (comparedTransform.position.x > GetRightBound())
             comparedTransform.position = new Vector3(GetLeftBound(), comparedTransform.position.y, comparedTransform.position.z);
         if (comparedTransform.position.x < GetLeftBound())
             comparedTransform.position = new Vector3(GetRightBound(), comparedTransform.position.y, comparedTransform.position.z);
@@ -50,8 +50,8 @@ public class BoundedArea : MonoBehaviour
         if (!m_collider)
             m_collider = GetComponent<BoxCollider>();
 
-        this.deepMagnitude = (m_collider.bounds.max.z - m_collider.center.z) * 2;
-        this.widthMagnitude = (m_collider.bounds.max.x - m_collider.center.x) * 2;
+        this.deepMagnitude = m_collider.size.z;
+        this.widthMagnitude = m_collider.size.x;
         Debug.Log(string.Format("deep {0} , width {1}", deepMagnitude, widthMagnitude));
     }
 

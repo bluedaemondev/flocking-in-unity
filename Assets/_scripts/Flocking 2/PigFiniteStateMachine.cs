@@ -14,7 +14,7 @@ public class PigFiniteStateMachine : FiniteStateMachine
     //    Dead
     //}
 
-    new Dictionary<BoidState, IState> _allStates;
+    new Dictionary<BoidState, IState> _allStates = new Dictionary<BoidState, IState>();
 
 
     public void AddState(BoidState key, IState state)
