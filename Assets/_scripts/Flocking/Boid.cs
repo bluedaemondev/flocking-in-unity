@@ -2,15 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BoidState
-{
-    Idle,
-    Patrol,
-    SearchingFood,
-    ChasingFood,
-    Eating,
-    Dead
-}
+
 
 public class Boid : MonoBehaviour
 {
@@ -81,6 +73,7 @@ public class Boid : MonoBehaviour
 
         if (currentlySeeking != null)
         {
+
             ApplyForce(FlockingBrain.Instance.CalculateSeek(currentlySeeking.transform.position, this) * seekWeight);
 
             if ((currentlySeeking.transform.position - transform.position).magnitude <= 1.5f)
