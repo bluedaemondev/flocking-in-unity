@@ -72,7 +72,7 @@ public class Boid : MonoBehaviour
     void Update()
     {
         CheckGlobalValues();
-        
+
         FoodFinder();
 
         ApplyForce(FlockingBrain.Instance.CalculateCohesion(this) * cohesionWeight);
@@ -81,7 +81,7 @@ public class Boid : MonoBehaviour
 
 
         if (currentlySeeking != null)
-        {           
+        {
             var distance = (currentlySeeking.transform.position - transform.position).magnitude;
 
             if (distance <= 5f)
@@ -90,7 +90,7 @@ public class Boid : MonoBehaviour
                 ApplyForce(FlockingBrain.Instance.CalculateSeek(currentlySeeking.transform.position, this) * seekWeight);
                 ApplyForce(FlockingBrain.Instance.CalculateArrive(currentlySeeking, 5, this));
 
-                if(distance <= 1.5f)
+                if (distance <= 1.5f)
                 {
                     currentlySeeking.GetComponent<Pickup>().BeEaten(this);
 
@@ -120,7 +120,7 @@ public class Boid : MonoBehaviour
 
         maxForce = FlockingBrain.Instance.GlobalMaxForce;
         maxSpeed = FlockingBrain.Instance.GlobalMaxSpeed;
-        viewDistance  = FlockingBrain.Instance.ViewDistance;
+        viewDistance = FlockingBrain.Instance.ViewDistance;
 
     }
 
@@ -133,14 +133,31 @@ public class Boid : MonoBehaviour
 
     void FoodFinder()
     {
-        if (currentlySeeking != null)
-            return;
+        //if (currentlySeeking != null)
+        //    return;
 
-        foreach (var pickup in PickupsManager.Instance.LoadedPickups)
+        //foreach (var pickup in PickupsManager.Instance.LoadedPickups)
+        //{
+        //    if (!pickup.hasSeeker /*&& Vector3.Magnitude(transform.position - pickup.transform.position) < forwardDistance*/)
+        //    {
+        //        this.currentlySeeking = pickup.gameObject;
+        //        pickup.hasSeeker = true;
+        //    }
+        //}
+        var inRange = Physics.SphereCastAll(transform.position, ViewDistance, Vector3.zero/*transform.forward * 0.5f*/, whatIsFood);
+
+        if (inRange != null && inRange.Length > 0 && !inRange[inRange.Length - 1].collider.GetComponent<Pickup>().hasSeeker)
         {
-            if (!pickup.hasSeeker /*&& Vector3.Magnitude(transform.position - pickup.transform.position) < forwardDistance*/)
+            Debug.Log("assert " + inRange[inRange.Length - 1].collider.name);
+
+            if (Vector3.Distance(currentlySeeking.transform.position, transform.position) >
+                Vector3.Distance(inRange[inRange.Length - 1].collider.transform.position, transform.position))
             {
-                this.currentlySeeking = pickup.gameObject;
+                this.currentlySeeking.GetComponent<Pickup>().hasSeeker = false;
+                this.currentlySeeking = inRange[inRange.Length - 1].transform.gameObject;
+                inRange[inRange.Length - 1].collider.GetComponent<Pickup>().hasSeeker = true;
+                
+                Debug.Log("new target for " + transform.name + " , " + currentlySeeking.name);
             }
         }
     }

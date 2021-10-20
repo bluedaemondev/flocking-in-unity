@@ -31,9 +31,6 @@ public class Hunter : MonoBehaviour
         _fsm.AddState(HunterEnum.Chasing, new SeekState(this._fsm, transform, FlockingBrain.Instance.GetRandomBoid(), arriveRadius));
         //_fsm.AddState(HunterEnum.Attacking, new AttackingState())
 
-
-
-
         _fsm.ChangeState(currentState);
     }
 
@@ -42,4 +39,6 @@ public class Hunter : MonoBehaviour
     {
         _fsm.OnUpdate();
     }
+
+
 }

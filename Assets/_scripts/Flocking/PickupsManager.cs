@@ -40,14 +40,20 @@ public class PickupsManager : MonoBehaviour
 
 
     }
-    private IEnumerator LoadPickupsInScene(int qty)
+    public IEnumerator LoadPickupsInScene(int qty)
     {
         for (int i = 0; i < qty; i++)
         {
-            loadedPickups.Add(GeneratePickup(RandomColliderPoint(this.areaSpawn)));
+            InstantiateOnScene();
             yield return null;/*new WaitForSeconds(0.333f);*/
         }
     }
+
+    public void InstantiateOnScene()
+    {
+        loadedPickups.Add(GeneratePickup(RandomColliderPoint(this.areaSpawn))); 
+    }
+
     private Vector3 RandomColliderPoint(BoxCollider col)
     {
 

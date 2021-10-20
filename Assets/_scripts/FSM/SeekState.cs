@@ -7,7 +7,7 @@ public class SeekState : IState
     private FiniteStateMachine fsm;
     private Transform chaseTarget;
     private Transform m_transform;
-    private float speed;
+    private float speed = 5f;
 
     private float energyPerSecond = 10f;
 
@@ -37,12 +37,16 @@ public class SeekState : IState
     public void OnUpdate()
     {
         movementDirection = (chaseTarget.position - m_transform.position);
-        //movementDirection.y = 0;
+        movementDirection.y = 0;
+        m_transform.GetComponent<Animator>().SetBool("moving", true);
+
         //if (rangeArrive <= movementDirection.magnitude)
         //{
-        //    //fsm.ChangeState(HunterEnum.Attacking);
-        //    //fsm.ChangeState(HunterEnum.Idle);
-        //    Debug.Log("should be attacking _ fsm");
+        //fsm.ChangeState(HunterEnum.Attacking);
+        //fsm.ChangeState(HunterEnum.Idle);
+        Debug.Log("should be attacking _ fsm");
+        //m_transform.GetComponent<Animator>().SetBool("moving", false);
+
         //}
         //else
         //{
@@ -52,15 +56,16 @@ public class SeekState : IState
 
         m_transform.position += m_transform.forward * Time.deltaTime * speed;
 
-        fsm.TotalEnergy -= energyPerSecond * Time.deltaTime;
+        fsm.TotalEnergy -= energyPerSecond * Time.deltaTime ;
 
         if (fsm.TotalEnergy <= 0)
         {
             fsm.ChangeState(HunterEnum.Idle);
+            m_transform.GetComponent<Animator>().SetBool("moving", false);
+
             fsm.TotalEnergy = 100;
         }
         //}
-
 
     }
 

@@ -47,13 +47,14 @@ public class PatrolState : IState
     }
     private void SearchForPigs()
     {
-        var aux = Physics.SphereCastAll(m_transform.position, 10, Vector3.zero, 0, whatIsFood.value);
-        Debug.DrawRay(m_transform.position, m_transform.forward * 10, Color.green);
+        var aux = Physics.SphereCastAll(m_transform.position,10, Vector3.zero, 10, whatIsFood);
+        Debug.DrawRay(m_transform.position, m_transform.forward * 5, Color.green);
 
         Debug.Log(string.Format("{0} pigs in range, following {1}", aux.Length, aux.Length > 0 ? aux[0].transform.name : "not assigned"));
 
         if (aux.Length > 0)
         {
+
             fsm.ChangeState(HunterEnum.Chasing);
         }
     }
@@ -82,11 +83,11 @@ public class PatrolState : IState
 
         this.fsm.TotalEnergy -= energyPerSecond * Time.deltaTime;
 
-        if (fsm.TotalEnergy <= 0)
-        {
-            fsm.ChangeState(HunterEnum.Idle);
-            fsm.TotalEnergy = 100;
-        }
+        //if (fsm.TotalEnergy <= 0)
+        //{
+        //    fsm.ChangeState(HunterEnum.Idle);
+        //    fsm.TotalEnergy = 100;
+        //}
 
         return dir;
     }
